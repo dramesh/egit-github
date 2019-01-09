@@ -1,9 +1,11 @@
 /******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -45,7 +47,7 @@ public class PullRequestRepositorySettingsPage extends
 
 	/**
 	 * Create pull request repository settings page
-	 * 
+	 *
 	 * @param taskRepository
 	 */
 	public PullRequestRepositorySettingsPage(final TaskRepository taskRepository) {
@@ -159,7 +161,7 @@ public class PullRequestRepositorySettingsPage extends
 	 */
 	public void applyTo(TaskRepository repository) {
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				IRepositoryConstants.CATEGORY_REVIEW);
+				TaskRepository.CATEGORY_REVIEW);
 		super.applyTo(repository);
 	}
 

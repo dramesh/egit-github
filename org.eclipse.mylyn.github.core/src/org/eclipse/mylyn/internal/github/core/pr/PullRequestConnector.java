@@ -1,9 +1,11 @@
 /******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -58,7 +60,7 @@ public class PullRequestConnector extends RepositoryConnector {
 
 	/**
 	 * Get repository label for id provider.
-	 * 
+	 *
 	 * @param repo
 	 * @return label
 	 */
@@ -69,7 +71,7 @@ public class PullRequestConnector extends RepositoryConnector {
 
 	/**
 	 * Create pull request task repository
-	 * 
+	 *
 	 * @param repo
 	 * @param username
 	 * @param password
@@ -86,13 +88,13 @@ public class PullRequestConnector extends RepositoryConnector {
 			repository.setCredentials(AuthenticationType.REPOSITORY,
 					new AuthenticationCredentials(username, password), true);
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				IRepositoryConstants.CATEGORY_REVIEW);
+				TaskRepository.CATEGORY_REVIEW);
 		return repository;
 	}
 
 	/**
 	 * Appends a trailing '/pull's segment to the given url
-	 * 
+	 *
 	 * @param repoUrl
 	 * @return appended string
 	 */
@@ -102,7 +104,7 @@ public class PullRequestConnector extends RepositoryConnector {
 
 	/**
 	 * Strip trailing '/pulls' segment from string if it ends with it.
-	 * 
+	 *
 	 * @param repoUrl
 	 * @return stripped string
 	 */
@@ -115,7 +117,7 @@ public class PullRequestConnector extends RepositoryConnector {
 
 	/**
 	 * Get pull request from task data
-	 * 
+	 *
 	 * @param data
 	 * @return pull request
 	 */
@@ -130,7 +132,7 @@ public class PullRequestConnector extends RepositoryConnector {
 
 	/**
 	 * Get repository id from pull request task repository url
-	 * 
+	 *
 	 * @param prRepoUrl
 	 * @return repository id
 	 */
@@ -152,7 +154,7 @@ public class PullRequestConnector extends RepositoryConnector {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see #KIND
 	 */
 	@Override

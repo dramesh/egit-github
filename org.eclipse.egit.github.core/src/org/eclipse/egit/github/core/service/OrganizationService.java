@@ -1,9 +1,11 @@
 /******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -44,7 +46,12 @@ public class OrganizationService extends GitHubService {
 	 * @since 4.2
 	 */
 	public static enum RoleFilter {
-		all, admin, member
+		/** Everybody. */
+		all,
+		/** "Admin" members of the organization. */
+		admin,
+		/** Ordinary non-admin members of the organization. */
+		member
 	}
 
 	/**
@@ -73,7 +80,7 @@ public class OrganizationService extends GitHubService {
 	 */
 	protected PagedRequest<User> createOrgRequest(String user, int start,
 			int size) {
-		PagedRequest<User> request = new PagedRequest<User>(start, size);
+		PagedRequest<User> request = new PagedRequest<>(start, size);
 		if (user == null)
 			request.setUri(SEGMENT_USER + SEGMENT_ORGS);
 		else {
@@ -83,6 +90,7 @@ public class OrganizationService extends GitHubService {
 			request.setUri(uri);
 		}
 		request.setType(new TypeToken<List<User>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -195,8 +203,9 @@ public class OrganizationService extends GitHubService {
 		if (organization.length() == 0)
 			throw new IllegalArgumentException("Organization cannot be empty"); //$NON-NLS-1$
 
-		HashMap<String, String> params = new HashMap<String, String>();
-		if(roleFilter != null) params.put("role", roleFilter.toString());
+		HashMap<String, String> params = new HashMap<>();
+		if (roleFilter != null)
+			params.put("role", roleFilter.toString()); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);
@@ -205,6 +214,7 @@ public class OrganizationService extends GitHubService {
 		request.setParams(params);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<User>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -228,6 +238,7 @@ public class OrganizationService extends GitHubService {
 		PagedRequest<User> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<User>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}

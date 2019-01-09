@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -44,6 +46,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 
 import org.eclipse.egit.github.core.RequestError;
@@ -143,6 +146,8 @@ public class GitHubClient {
 	private String user;
 
 	private String credentials;
+
+	private Proxy proxy;
 
 	private String userAgent = USER_AGENT;
 
@@ -285,6 +290,11 @@ public class GitHubClient {
 	 */
 	protected HttpURLConnection createConnection(String uri) throws IOException {
 		URL url = new URL(createUri(uri));
+
+		if (proxy != null) {
+			return (HttpURLConnection) url.openConnection(proxy);
+		}
+
 		return (HttpURLConnection) url.openConnection();
 	}
 
@@ -362,6 +372,19 @@ public class GitHubClient {
 					+ EncodingUtils.toBase64(user + ':' + password);
 		else
 			credentials = null;
+		return this;
+	}
+
+	/**
+	 * Set a proxy to use for HTPPS connections through this client.
+	 *
+	 * @param proxy
+	 *            to set; may be {@code null}, in which case no proxy is used
+	 * @return this client
+	 * @since 5.3
+	 */
+	public GitHubClient setProxy(Proxy proxy) {
+		this.proxy = proxy;
 		return this;
 	}
 
@@ -655,7 +678,7 @@ public class GitHubClient {
 			}
 		} else {
 			request.setFixedLengthStreamingMode(0);
-			request.setRequestProperty("Content-Length", "0");
+			request.setRequestProperty("Content-Length", "0"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -695,7 +718,12 @@ public class GitHubClient {
 	 */
 	public InputStream getStream(final GitHubRequest request)
 			throws IOException {
-		return getResponseStream(createGet(request.generateUri()));
+		HttpURLConnection httpRequest = createGet(request.generateUri());
+		String accept = request.getResponseContentType();
+		if (accept != null) {
+			httpRequest.setRequestProperty(HEADER_ACCEPT, accept);
+		}
+		return getResponseStream(httpRequest);
 	}
 
 	/**
@@ -830,7 +858,7 @@ public class GitHubClient {
 	 * @return this client
 	 */
 	protected GitHubClient updateRateLimits(HttpURLConnection request) {
-		String limit = request.getHeaderField("X-RateLimit-Limit");
+		String limit = request.getHeaderField("X-RateLimit-Limit"); //$NON-NLS-1$
 		if (limit != null && limit.length() > 0)
 			try {
 				requestLimit = Integer.parseInt(limit);
@@ -840,7 +868,7 @@ public class GitHubClient {
 		else
 			requestLimit = -1;
 
-		String remaining = request.getHeaderField("X-RateLimit-Remaining");
+		String remaining = request.getHeaderField("X-RateLimit-Remaining"); //$NON-NLS-1$
 		if (remaining != null && remaining.length() > 0)
 			try {
 				remainingRequests = Integer.parseInt(remaining);

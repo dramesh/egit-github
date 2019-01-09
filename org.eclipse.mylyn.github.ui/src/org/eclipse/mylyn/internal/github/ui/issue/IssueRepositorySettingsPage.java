@@ -1,9 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2011 Red Hat and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     David Green <david.green@tasktop.com> - initial contribution
@@ -47,7 +49,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 
 	/**
 	 * Populate taskRepository with repository settings.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            - Object to populate
 	 */
@@ -179,7 +181,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 	 */
 	public void applyTo(TaskRepository repository) {
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				IRepositoryConstants.CATEGORY_BUGS);
+				TaskRepository.CATEGORY_BUGS);
 		super.applyTo(repository);
 	}
 

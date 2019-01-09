@@ -1,21 +1,23 @@
 /******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.Date;
 
 import org.eclipse.egit.github.core.util.DateUtils;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Repository model class
@@ -50,7 +52,13 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 
 	private int size;
 
+	/** Legacy field, kept for backwards compatibility. It's actually the stargazersCount. */
 	private int watchers;
+
+	private int stargazersCount;
+
+	/** This is what Github shows as "watchers". */
+	private int subscribersCount = -1;
 
 	private Repository parent;
 
@@ -243,10 +251,29 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 	}
 
 	/**
+	 * @return stars
+	 * @since 5.0
+	 */
+	public int getStars() {
+		return stargazersCount;
+	}
+
+	/**
+	 * @param stars
+	 * @return this repository
+	 * @since 5.0
+	 */
+	public Repository setStars(int stars) {
+		this.stargazersCount = stars;
+		return this;
+	}
+
+	/**
 	 * @return watchers
 	 */
 	public int getWatchers() {
-		return watchers;
+		// Account for legacy serializations that had only the watchers field
+		return subscribersCount < 0 ? watchers : subscribersCount;
 	}
 
 	/**
@@ -254,7 +281,7 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 	 * @return this repository
 	 */
 	public Repository setWatchers(int watchers) {
-		this.watchers = watchers;
+		this.subscribersCount = watchers;
 		return this;
 	}
 
@@ -399,24 +426,6 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 	 */
 	public Repository setDefaultBranch(String defaultBranch) {
 		this.defaultBranch = defaultBranch;
-		return this;
-	}
-
-	/**
-	 * @return masterBranch
-	*/
-	@Deprecated
-	public String getMasterBranch() {
-		return defaultBranch;
-	}
-
-	/**
-	 * @param masterBranch
-	 * @return this repository
-	 */
-	@Deprecated
-	public Repository setMasterBranch(String masterBranch) {
-		this.defaultBranch = masterBranch;
 		return this;
 	}
 

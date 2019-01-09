@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -67,6 +69,8 @@ public class User implements Serializable {
 
 	private String email;
 
+	// Github legacy field; needs to be kept for proper deserialization.
+	@SuppressWarnings("unused")
 	private String gravatarId;
 
 	private String htmlUrl;
@@ -352,26 +356,6 @@ public class User implements Serializable {
 	 */
 	public User setEmail(String email) {
 		this.email = email;
-		return this;
-	}
-
-	/**
-	 * @return gravatarId
-	 * @deprecated
-	 */
-	@Deprecated
-	public String getGravatarId() {
-		return gravatarId;
-	}
-
-	/**
-	 * @param gravatarId
-	 * @return this user
-	 * @deprecated
-	 */
-	@Deprecated
-	public User setGravatarId(String gravatarId) {
-		this.gravatarId = gravatarId;
 		return this;
 	}
 

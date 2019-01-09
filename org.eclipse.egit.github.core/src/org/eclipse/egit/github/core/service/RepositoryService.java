@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -19,6 +21,7 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FORKS
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_HOOKS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LANGUAGES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LEGACY;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_MERGES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOSITORIES;
@@ -47,6 +50,8 @@ import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
 import org.eclipse.egit.github.core.RepositoryHook;
 import org.eclipse.egit.github.core.RepositoryId;
+import org.eclipse.egit.github.core.RepositoryMerging;
+import org.eclipse.egit.github.core.RepositoryMergingResponse;
 import org.eclipse.egit.github.core.RepositoryTag;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -109,14 +114,15 @@ public class RepositoryService extends GitHubService {
 	 */
 	public static final String TYPE_ALL = "all"; //$NON-NLS-1$
 
-	private static class RepositoryContainer implements
-			IResourceProvider<SearchRepository> {
+	private static class RepositoryContainer
+			implements IResourceProvider<SearchRepository> {
 
 		private List<SearchRepository> repositories;
 
 		/**
 		 * @see org.eclipse.egit.github.core.IResourceProvider#getResources()
 		 */
+		@Override
 		public List<SearchRepository> getResources() {
 			return repositories;
 		}
@@ -228,6 +234,7 @@ public class RepositoryService extends GitHubService {
 		request.setUri(SEGMENT_USER + SEGMENT_REPOS);
 		request.setParams(filterData);
 		request.setType(new TypeToken<List<Repository>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -251,9 +258,10 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<Repository> request = createPagedRequest();
 		request.setUri(SEGMENT_REPOSITORIES);
 		if (since > 0)
-			request.setParams(Collections.singletonMap("since",
+			request.setParams(Collections.singletonMap("since", //$NON-NLS-1$
 					Long.toString(since)));
 		request.setType(new TypeToken<List<Repository>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -311,6 +319,7 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<Repository> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -423,6 +432,7 @@ public class RepositoryService extends GitHubService {
 		request.setParams(filterData);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -481,8 +491,8 @@ public class RepositoryService extends GitHubService {
 		if (query.length() == 0)
 			throw new IllegalArgumentException("Query cannot be empty"); //$NON-NLS-1$
 
-		StringBuilder uri = new StringBuilder(SEGMENT_LEGACY + SEGMENT_REPOS
-				+ SEGMENT_SEARCH);
+		StringBuilder uri = new StringBuilder(
+				SEGMENT_LEGACY + SEGMENT_REPOS + SEGMENT_SEARCH);
 		final String encodedQuery = URLEncoder.encode(query, CHARSET_UTF8)
 				.replace("+", "%20") //$NON-NLS-1$ //$NON-NLS-2$
 				.replace(".", "%2E"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -490,7 +500,7 @@ public class RepositoryService extends GitHubService {
 
 		PagedRequest<SearchRepository> request = createPagedRequest();
 
-		Map<String, String> params = new HashMap<String, String>(2, 1);
+		Map<String, String> params = new HashMap<>(2, 1);
 		if (language != null && language.length() > 0)
 			params.put(PARAM_LANGUAGE, language);
 		if (startPage > 0)
@@ -623,6 +633,7 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<Repository> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -645,7 +656,8 @@ public class RepositoryService extends GitHubService {
 	 * @param repository
 	 * @return iterator over repositories
 	 */
-	public PageIterator<Repository> pageForks(IRepositoryIdProvider repository) {
+	public PageIterator<Repository> pageForks(
+			IRepositoryIdProvider repository) {
 		return pageForks(repository, PAGE_SIZE);
 	}
 
@@ -767,7 +779,7 @@ public class RepositoryService extends GitHubService {
 		uri.append('/').append(id);
 		uri.append(SEGMENT_FORKS);
 		if (organization != null)
-			uri.append("?org=").append(organization);
+			uri.append("?org=").append(organization); //$NON-NLS-1$
 		return client.post(uri.toString(), null, Repository.class);
 	}
 
@@ -788,6 +800,7 @@ public class RepositoryService extends GitHubService {
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<Map<String, Long>>() {
+			// make protected type visible
 		}.getType());
 		return (Map<String, Long>) client.get(request).getBody();
 	}
@@ -808,6 +821,7 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<RepositoryBranch> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<RepositoryBranch>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -828,6 +842,7 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<RepositoryTag> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<RepositoryTag>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -851,6 +866,7 @@ public class RepositoryService extends GitHubService {
 		if (includeAnonymous)
 			request.setParams(Collections.singletonMap("anon", "1")); //$NON-NLS-1$ //$NON-NLS-2$
 		request.setType(new TypeToken<List<Contributor>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -871,6 +887,7 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<RepositoryHook> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<RepositoryHook>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -968,5 +985,31 @@ public class RepositoryService extends GitHubService {
 		uri.append('/').append(hookId);
 		uri.append(SEGMENT_TEST);
 		client.post(uri.toString());
+	}
+
+	/**
+	 * Merge branches in repository. This will merge branch and push result to
+	 * the repository.
+	 *
+	 * @param repository
+	 * @param merging
+	 * @return merging result or null if there is nothing to merge
+	 * @throws IOException
+	 * @since 5.3
+	 */
+	public RepositoryMergingResponse mergingBranches(
+			IRepositoryIdProvider repository, RepositoryMerging merging)
+			throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_MERGES);
+		RepositoryMergingResponse result = client.post(uri.toString(), merging,
+				RepositoryMergingResponse.class);
+		if (result != null && result.getCommit() != null
+				&& result.getCommit().getSha() == null) {
+			result.getCommit().setSha(result.getSha());
+		}
+		return result;
 	}
 }

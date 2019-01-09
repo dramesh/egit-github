@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -166,6 +168,7 @@ public class IssueService extends GitHubService {
 		/**
 		 * @see org.eclipse.egit.github.core.IResourceProvider#getResources()
 		 */
+		@Override
 		public List<SearchIssue> getResources() {
 			return issues;
 		}
@@ -256,6 +259,7 @@ public class IssueService extends GitHubService {
 		request.setParams(filterData);
 		request.setUri(SEGMENT_ISSUES);
 		request.setType(new TypeToken<List<RepositoryIssue>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -395,7 +399,7 @@ public class IssueService extends GitHubService {
 	/**
 	 * Get an issue's comments
 	 *
-	 * @param repository
+	 * @param repoId
 	 * @param issueNumber
 	 * @return list of comments
 	 * @throws IOException
@@ -415,6 +419,7 @@ public class IssueService extends GitHubService {
 		PagedRequest<Comment> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Comment>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -436,6 +441,7 @@ public class IssueService extends GitHubService {
 		PagedRequest<Issue> request = createPagedRequest(start, size);
 		request.setParams(filterData).setUri(uri);
 		request.setType(new TypeToken<List<Issue>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -588,7 +594,7 @@ public class IssueService extends GitHubService {
 	 * @return map
 	 */
 	protected Map<Object, Object> createIssueMap(Issue issue, boolean newIssue) {
-		Map<Object, Object> params = new HashMap<Object, Object>();
+		Map<Object, Object> params = new HashMap<>();
 		if (issue != null) {
 			params.put(FIELD_BODY, issue.getBody());
 			params.put(FIELD_TITLE, issue.getTitle());
@@ -599,16 +605,15 @@ public class IssueService extends GitHubService {
 			Milestone milestone = issue.getMilestone();
 			if (milestone != null) {
 				int number = milestone.getNumber();
-				if (number > 0)
-					params.put(FILTER_MILESTONE, Integer.toString(number));
-				else {
-					if (!newIssue)
-						params.put(FILTER_MILESTONE, ""); //$NON-NLS-1$
+				if (number > 0) {
+					params.put(FILTER_MILESTONE, Integer.valueOf(number));
+				} else if (!newIssue) {
+					params.put(FILTER_MILESTONE, null);
 				}
 			}
 			List<Label> labels = issue.getLabels();
 			if (labels != null) {
-				List<String> labelNames = new ArrayList<String>(labels.size());
+				List<String> labelNames = new ArrayList<>(labels.size());
 				for (Label label : labels)
 					labelNames.add(label.getName());
 				params.put(FILTER_LABELS, labelNames);
@@ -701,7 +706,6 @@ public class IssueService extends GitHubService {
 	 * Edit issue
 	 *
 	 * @param repoId
-	 * @param repository
 	 * @param issue
 	 * @return created issue
 	 * @throws IOException
@@ -807,7 +811,7 @@ public class IssueService extends GitHubService {
 		uri.append('/').append(issueNumber);
 		uri.append(SEGMENT_COMMENTS);
 
-		Map<String, String> params = new HashMap<String, String>(1, 1);
+		Map<String, String> params = new HashMap<>(1, 1);
 		params.put(FIELD_BODY, comment);
 
 		return client.post(uri.toString(), params, Comment.class);
@@ -870,8 +874,7 @@ public class IssueService extends GitHubService {
 	/**
 	 * Edit issue comment
 	 *
-	 * @param user
-	 * @param repository
+	 * @param repoId
 	 * @param comment
 	 * @return edited comment
 	 * @throws IOException
@@ -945,8 +948,7 @@ public class IssueService extends GitHubService {
 	/**
 	 * Delete the issue comment with the given id
 	 *
-	 * @param user
-	 * @param repository
+	 * @param repoId
 	 * @param commentId
 	 * @throws IOException
 	 */
@@ -1008,6 +1010,7 @@ public class IssueService extends GitHubService {
 		uri.append(SEGMENT_EVENTS);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<IssueEvent>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -1061,6 +1064,7 @@ public class IssueService extends GitHubService {
 		uri.append(SEGMENT_EVENTS);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<IssueEvent>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}

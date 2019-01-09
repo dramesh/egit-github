@@ -1,16 +1,16 @@
 /******************************************************************************
  *  Copyright (c) 2012 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *****************************************************************************/
 package org.eclipse.egit.github.core.event;
-
-import java.io.Serializable;
 
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.PullRequest;
@@ -18,8 +18,7 @@ import org.eclipse.egit.github.core.PullRequest;
 /**
  * Payload for an event with type {@link Event#TYPE_PULL_REQUEST_REVIEW_COMMENT}
  */
-public class PullRequestReviewCommentPayload extends EventPayload implements
-		Serializable {
+public class PullRequestReviewCommentPayload extends EventPayload {
 
 	private static final long serialVersionUID = -2403658752886394741L;
 

@@ -1,9 +1,11 @@
 /******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -36,7 +38,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Unit tests of {@link DataService}
@@ -408,6 +410,19 @@ public class DataServiceTest {
 	}
 
 	/**
+	 * List tags
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void listTags() throws IOException {
+		service.listTags(repo);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/o/n/git/refs/tags"));
+		verify(client).get(request);
+	}
+
+	/**
 	 * Create tag with null tag
 	 *
 	 * @throws IOException
@@ -428,5 +443,43 @@ public class DataServiceTest {
 		tag.setObject(new TypedResource());
 		service.createTag(repo, tag);
 		verify(client).post(eq("/repos/o/n/git/tags"), any(), eq(Tag.class));
+	}
+
+	/**
+	 * Delete reference
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteReference() throws IOException {
+		Reference ref = new Reference();
+		ref.setRef("refs/heads/master");
+		service.deleteReference(repo, ref);
+		verify(client).delete(eq("/repos/o/n/git/refs/heads/master"));
+	}
+
+	/**
+	 * Delete branch
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteBranch() throws IOException {
+		String branch = "branch";
+		service.deleteBranch(repo, branch);
+		verify(client).delete(eq("/repos/o/n/git/refs/heads/branch"));
+	}
+
+	/**
+	 * Delete tag
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteTag() throws IOException {
+		Tag tag = new Tag();
+		tag.setTag("tag");
+		service.deleteTag(repo, tag);
+		verify(client).delete(eq("/repos/o/n/git/refs/tags/tag"));
 	}
 }

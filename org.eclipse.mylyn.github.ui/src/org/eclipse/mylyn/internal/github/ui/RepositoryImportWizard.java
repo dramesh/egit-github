@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 Christian Trutz
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Christian Trutz - initial API and implementation
@@ -57,12 +59,15 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 		setNeedsProgressMonitor(true);
 		setDefaultPageImageDescriptor(WorkbenchImages
 				.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ));
+		setWindowTitle(Messages.RepositorySearchWizardPage_Title);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
+		// empty
 	}
 
 	/**
@@ -98,15 +103,13 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 	public boolean performFinish() {
 		final SearchRepository[] repositories = repositorySearchWizardPage
 				.getRepositories();
-		String name = repositories.length != 1 ? MessageFormat.format(
+		String name = MessageFormat.format(
 				Messages.RepositoryImportWizard_CloningRepositories,
-				repositories.length)
-				: Messages.RepositoryImportWizard_CloningRepository;
+				Integer.valueOf(repositories.length));
 		Job job = new Job(name) {
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(
-						Messages.RepositoryImportWizard_CloningRepository,
-						repositories.length * 3);
+				monitor.beginTask(name, repositories.length * 3);
 				GitHubClient client = GitHub
 						.configureClient(new GitHubClient());
 				RepositoryUtil repositoryUtil = Activator.getDefault()
@@ -147,7 +150,7 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 				return Status.OK_STATUS;
 			}
 		};
-		IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) PlatformUI
+		IWorkbenchSiteProgressService progress = PlatformUI
 				.getWorkbench().getService(IWorkbenchSiteProgressService.class);
 		if (progress != null)
 			progress.schedule(job);

@@ -1,23 +1,23 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Jason Tsay (GitHub Inc.) - initial API and implementation
  *******************************************************************************/
 package org.eclipse.egit.github.core.event;
 
-import java.io.Serializable;
-
 import org.eclipse.egit.github.core.Issue;
 
 /**
  * IssuesEvent payload model class.
  */
-public class IssuesPayload extends EventPayload implements Serializable {
+public class IssuesPayload extends EventPayload {
 
 	private static final long serialVersionUID = 3210795492806809443L;
 

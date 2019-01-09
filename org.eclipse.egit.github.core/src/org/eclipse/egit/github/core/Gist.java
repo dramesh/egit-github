@@ -1,16 +1,16 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *******************************************************************************/
 package org.eclipse.egit.github.core;
-
-import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.egit.github.core.util.DateUtils;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * GitHub gist model class.
@@ -259,24 +261,6 @@ public class Gist implements Serializable {
 	 */
 	public Gist setOwner(User owner) {
 		this.owner = owner;
-		return this;
-	}
-
-	/**
-	 * @return user
-	 */
-	@Deprecated
-	public User getUser() {
-		return owner;
-	}
-
-	/**
-	 * @param user
-	 * @return this gist
-	 */
-	@Deprecated
-	public Gist setUser(User user) {
-		this.owner = user;
 		return this;
 	}
 }

@@ -1,9 +1,11 @@
 /******************************************************************************
  *  Copyright (c) 2015 Jon Ander Peñalba
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Jon Ander Peñalba - initial API and implementation
@@ -18,6 +20,8 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USERS
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -27,8 +31,6 @@ import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
-
-import com.google.gson.reflect.TypeToken;
 
 /**
  * Service class for dealing with users starring GitHub repositories.
@@ -72,6 +74,7 @@ public class StargazerService extends GitHubService {
 		uri.append(SEGMENT_STARGAZERS);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<User>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -148,6 +151,7 @@ public class StargazerService extends GitHubService {
 		uri.append(SEGMENT_STARRED);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -163,6 +167,7 @@ public class StargazerService extends GitHubService {
 		PagedRequest<Repository> request = createPagedRequest(start, size);
 		request.setUri(SEGMENT_USER + SEGMENT_STARRED);
 		request.setType(new TypeToken<List<Repository>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}

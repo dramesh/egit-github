@@ -1,9 +1,11 @@
 /******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -129,6 +131,7 @@ public class UserService extends GitHubService {
 			request.setUri(uri);
 		}
 		request.setType(new TypeToken<List<User>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -153,6 +156,7 @@ public class UserService extends GitHubService {
 			request.setUri(uri);
 		}
 		request.setType(new TypeToken<List<User>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -403,6 +407,7 @@ public class UserService extends GitHubService {
 		PagedRequest<String> request = createPagedRequest();
 		request.setUri(SEGMENT_USER + SEGMENT_EMAILS);
 		request.setType(new TypeToken<List<String>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -449,6 +454,7 @@ public class UserService extends GitHubService {
 		PagedRequest<Key> request = createPagedRequest();
 		request.setUri(SEGMENT_USER + SEGMENT_KEYS);
 		request.setType(new TypeToken<List<Key>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}

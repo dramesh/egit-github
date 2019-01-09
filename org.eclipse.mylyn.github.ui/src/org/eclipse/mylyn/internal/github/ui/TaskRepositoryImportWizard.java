@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -32,7 +34,7 @@ import org.eclipse.ui.internal.WorkbenchImages;
 
 /**
  * Import repositories wizard class.
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class TaskRepositoryImportWizard extends Wizard implements IImportWizard {
@@ -48,11 +50,13 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 		setNeedsProgressMonitor(true);
 		setDefaultPageImageDescriptor(WorkbenchImages
 				.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ));
+		setWindowTitle(org.eclipse.mylyn.internal.github.ui.Messages.TaskRepositoryImportWizard_Title);
 	}
 
 	/**
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
+	@Override
 	public void addPages() {
 		credentialsPage = new CredentialsWizardPage();
 		addPage(credentialsPage);
@@ -63,6 +67,7 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 	/**
 	 * @see org.eclipse.jface.wizard.Wizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
 	 */
+	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		IWizardPage next = super.getNextPage(page);
 		if (next == reposPage) {
@@ -76,13 +81,15 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
 	 *      org.eclipse.jface.viewers.IStructuredSelection)
 	 */
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-
+		// empty
 	}
 
 	/**
 	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
 	 */
+	@Override
 	public boolean performFinish() {
 		String user = credentialsPage.getUserName();
 		String password = credentialsPage.getPassword();
@@ -103,7 +110,7 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 			repository.setCredentials(AuthenticationType.REPOSITORY,
 					credentials, true);
 			repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-					IRepositoryConstants.CATEGORY_REVIEW);
+					TaskRepository.CATEGORY_REVIEW);
 			manager.addRepository(repository);
 		}
 		return true;

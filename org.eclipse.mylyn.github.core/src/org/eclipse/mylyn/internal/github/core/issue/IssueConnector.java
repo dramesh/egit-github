@@ -1,9 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2011 Red Hat and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     David Green <david.green@tasktop.com> - initial contribution
@@ -46,7 +48,6 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
 import org.eclipse.mylyn.internal.github.core.RepositoryConnector;
-import org.eclipse.mylyn.internal.github.core.pr.PullRequestConnector;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -67,7 +68,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Get repository label for id provider
-	 * 
+	 *
 	 * @param repo
 	 * @return label
 	 */
@@ -77,7 +78,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Create issue task repository
-	 * 
+	 *
 	 * @param repo
 	 * @param username
 	 * @param password
@@ -94,13 +95,13 @@ public class IssueConnector extends RepositoryConnector {
 			repository.setCredentials(AuthenticationType.REPOSITORY,
 					new AuthenticationCredentials(username, password), true);
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				IRepositoryConstants.CATEGORY_BUGS);
+				TaskRepository.CATEGORY_BUGS);
 		return repository;
 	}
 
 	/**
 	 * Create client for repository
-	 * 
+	 *
 	 * @param repository
 	 * @return client
 	 */
@@ -131,7 +132,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Refresh labels for repository
-	 * 
+	 *
 	 * @param repository
 	 * @return labels
 	 * @throws CoreException
@@ -155,13 +156,13 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Get labels for task repository.
-	 * 
+	 *
 	 * @param repository
 	 * @return non-null but possibly empty list of labels
 	 */
 	public List<Label> getLabels(TaskRepository repository) {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
-		List<Label> labels = new LinkedList<Label>();
+		List<Label> labels = new LinkedList<>();
 		List<Label> cached = this.repositoryLabels.get(repository);
 		if (cached != null)
 			labels.addAll(cached);
@@ -170,7 +171,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Are there cached labels for the specified task repository?
-	 * 
+	 *
 	 * @param repository
 	 * @return true if contains labels, false otherwise
 	 */
@@ -180,7 +181,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Refresh milestones for repository
-	 * 
+	 *
 	 * @param repository
 	 * @return milestones
 	 * @throws CoreException
@@ -192,7 +193,7 @@ public class IssueConnector extends RepositoryConnector {
 		GitHubClient client = createClient(repository);
 		MilestoneService service = new MilestoneService(client);
 		try {
-			List<Milestone> milestones = new LinkedList<Milestone>();
+			List<Milestone> milestones = new LinkedList<>();
 			milestones.addAll(service.getMilestones(repo.getOwner(),
 					repo.getName(), IssueService.STATE_OPEN));
 			milestones.addAll(service.getMilestones(repo.getOwner(),
@@ -207,13 +208,13 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Get milestones for task repository.
-	 * 
+	 *
 	 * @param repository
 	 * @return non-null but possibly empty list of milestones
 	 */
 	public List<Milestone> getMilestones(TaskRepository repository) {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
-		List<Milestone> milestones = new LinkedList<Milestone>();
+		List<Milestone> milestones = new LinkedList<>();
 		List<Milestone> cached = this.repositoryMilestones.get(repository);
 		if (cached != null)
 			milestones.addAll(cached);
@@ -222,7 +223,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Are there cached milestones for the specified task repository?
-	 * 
+	 *
 	 * @param repository
 	 * @return true if contains milestones, false otherwise
 	 */
@@ -232,7 +233,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @return always {@code true}
 	 */
 	@Override
@@ -242,7 +243,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @return always {@code true}
 	 */
 	@Override
@@ -252,7 +253,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see #KIND
 	 */
 	@Override
@@ -292,7 +293,7 @@ public class IssueConnector extends RepositoryConnector {
 			GitHubClient client = createClient(repository);
 			IssueService service = new IssueService(client);
 
-			Map<String, String> filterData = new HashMap<String, String>();
+			Map<String, String> filterData = new HashMap<>();
 			String mentions = query.getAttribute(IssueService.FILTER_MENTIONED);
 			if (mentions != null)
 				filterData.put(IssueService.FILTER_MENTIONED, mentions);

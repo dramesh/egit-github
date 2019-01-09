@@ -1,9 +1,11 @@
 /******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -21,6 +23,7 @@ import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,10 +144,11 @@ public class CommitService extends GitHubService {
 				size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<RepositoryCommit>>() {
+			// make protected type visible
 		}.getType());
 
 		if (sha != null || path != null) {
-			Map<String, String> params = new HashMap<String, String>();
+			Map<String, String> params = new HashMap<>();
 			if (sha != null)
 				params.put("sha", sha); //$NON-NLS-1$
 			if (path != null)
@@ -165,20 +169,57 @@ public class CommitService extends GitHubService {
 	 */
 	public RepositoryCommit getCommit(IRepositoryIdProvider repository,
 			String sha) throws IOException {
+		GitHubRequest request = getCommitRequest(repository, sha);
+		request.setType(RepositoryCommit.class);
+		return (RepositoryCommit) client.get(request).getBody();
+	}
+
+	/**
+	 * Get diff for commit with given SHA-1 from given repository. It is the
+	 * responsibility of the calling method to close the returned stream.
+	 *
+	 * @param repository
+	 * @param sha
+	 * @return diff stream
+	 * @throws IOException
+	 */
+	public InputStream getCommitDiff(IRepositoryIdProvider repository,
+			String sha) throws IOException {
+		GitHubRequest request = getCommitRequest(repository, sha);
+		request.setResponseContentType(ACCEPT_DIFF);
+		return client.getStream(request);
+	}
+
+	/**
+	 * Get patch for commit with given SHA-1 from given repository. It is the
+	 * responsibility of the calling method to close the returned stream.
+	 *
+	 * @param repository
+	 * @param sha
+	 * @return patch stream
+	 * @throws IOException
+	 */
+	public InputStream getCommitPatch(IRepositoryIdProvider repository,
+			String sha) throws IOException {
+		GitHubRequest request = getCommitRequest(repository, sha);
+		request.setResponseContentType(ACCEPT_PATCH);
+		return client.getStream(request);
+	}
+
+	private GitHubRequest getCommitRequest(IRepositoryIdProvider repository,
+			String sha) {
 		String id = getId(repository);
-		if (sha == null)
+		if (sha == null) {
 			throw new IllegalArgumentException("Sha cannot be null"); //$NON-NLS-1$
-		if (sha.length() == 0)
+		} else if (sha.length() == 0) {
 			throw new IllegalArgumentException("Sha cannot be empty"); //$NON-NLS-1$
+		}
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_COMMITS);
 		uri.append('/').append(sha);
-		GitHubRequest request = createRequest();
-		request.setUri(uri);
-		request.setType(RepositoryCommit.class);
-		return (RepositoryCommit) client.get(request).getBody();
+		return createRequest().setUri(uri);
 	}
 
 	/**
@@ -244,6 +285,7 @@ public class CommitService extends GitHubService {
 		PagedRequest<CommitComment> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<CommitComment>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -343,25 +385,64 @@ public class CommitService extends GitHubService {
 	 */
 	public RepositoryCommitCompare compare(IRepositoryIdProvider repository,
 			String base, String head) throws IOException {
-		String id = getId(repository);
-		if (base == null)
-			throw new IllegalArgumentException("Base cannot be null"); //$NON-NLS-1$
-		if (base.length() == 0)
-			throw new IllegalArgumentException("Base cannot be empty"); //$NON-NLS-1$
+		GitHubRequest request = getCompareRequest(repository, base, head);
+		request.setType(RepositoryCommitCompare.class);
+		return (RepositoryCommitCompare) client.get(request).getBody();
+	}
 
-		if (head == null)
+	/**
+	 * Get diff between base and head commits. It is the responsibility of the
+	 * calling method to close the returned stream.
+	 *
+	 * @param repository
+	 * @param base
+	 * @param head
+	 * @return diff stream
+	 * @throws IOException
+	 */
+	public InputStream compareDiff(IRepositoryIdProvider repository,
+			String base, String head) throws IOException {
+		GitHubRequest request = getCompareRequest(repository, base, head);
+		request.setResponseContentType(ACCEPT_DIFF);
+		return client.getStream(request);
+	}
+
+	/**
+	 * Get patch between base and head commits. It is the responsibility of the
+	 * calling method to close the returned stream.
+	 *
+	 * @param repository
+	 * @param base
+	 * @param head
+	 * @return patch stream
+	 * @throws IOException
+	 */
+	public InputStream comparePatch(IRepositoryIdProvider repository,
+			String base, String head) throws IOException {
+		GitHubRequest request = getCompareRequest(repository, base, head);
+		request.setResponseContentType(ACCEPT_PATCH);
+		return client.getStream(request);
+	}
+
+	private GitHubRequest getCompareRequest(IRepositoryIdProvider repository,
+			String base, String head) {
+		String id = getId(repository);
+		if (base == null) {
+			throw new IllegalArgumentException("Base cannot be null"); //$NON-NLS-1$
+		} else if (base.length() == 0) {
+			throw new IllegalArgumentException("Base cannot be empty"); //$NON-NLS-1$
+		}
+		if (head == null) {
 			throw new IllegalArgumentException("Head cannot be null"); //$NON-NLS-1$
-		if (head.length() == 0)
+		} else if (head.length() == 0) {
 			throw new IllegalArgumentException("Head cannot be empty"); //$NON-NLS-1$
+		}
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_COMPARE);
 		uri.append('/').append(base).append("...").append(head); //$NON-NLS-1$
-		GitHubRequest request = createRequest();
-		request.setType(RepositoryCommitCompare.class);
-		request.setUri(uri);
-		return (RepositoryCommitCompare) client.get(request).getBody();
+		return createRequest().setUri(uri);
 	}
 
 	/**
@@ -386,6 +467,7 @@ public class CommitService extends GitHubService {
 		uri.append('/').append(sha);
 		PagedRequest<CommitStatus> request = createPagedRequest();
 		request.setType(new TypeToken<List<CommitStatus>>() {
+			// make protected type visible
 		}.getType());
 		request.setUri(uri);
 		return getAll(request);
@@ -410,15 +492,15 @@ public class CommitService extends GitHubService {
 		if (status == null)
 			throw new IllegalArgumentException("Status cannot be null"); //$NON-NLS-1$
 
-		Map<String, String> params = new HashMap<String, String>(3, 1);
+		Map<String, String> params = new HashMap<>(3, 1);
 		if (status.getState() != null)
-			params.put("state", status.getState());
+			params.put("state", status.getState()); //$NON-NLS-1$
 		if (status.getTargetUrl() != null)
-			params.put("target_url", status.getTargetUrl());
+			params.put("target_url", status.getTargetUrl()); //$NON-NLS-1$
 		if (status.getDescription() != null)
-			params.put("description", status.getDescription());
+			params.put("description", status.getDescription()); //$NON-NLS-1$
 		if (status.getContext() != null)
-			params.put("context", status.getContext());
+			params.put("context", status.getContext()); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
@@ -481,6 +563,7 @@ public class CommitService extends GitHubService {
 		PagedRequest<CommitComment> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<CommitComment>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}

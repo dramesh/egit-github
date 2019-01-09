@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -50,11 +52,12 @@ public class DateFormatter implements JsonDeserializer<Date>,
 			format.setTimeZone(timeZone);
 	}
 
+	@Override
 	public Date deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
 		JsonParseException exception = null;
 		final String value = json.getAsString();
-		for (DateFormat format : formats)
+		for (DateFormat format : formats) {
 			try {
 				synchronized (format) {
 					return format.parse(value);
@@ -62,9 +65,15 @@ public class DateFormatter implements JsonDeserializer<Date>,
 			} catch (ParseException e) {
 				exception = new JsonParseException(e);
 			}
-		throw exception;
+		}
+		if (exception != null) { // Always true here.
+			throw exception;
+		}
+		// We'll never get here, but JDT's null analysis get's confused.
+		return null;
 	}
 
+	@Override
 	public JsonElement serialize(Date date, Type type,
 			JsonSerializationContext context) {
 		final DateFormat primary = formats[0];

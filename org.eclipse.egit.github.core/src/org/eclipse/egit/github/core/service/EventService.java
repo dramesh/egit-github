@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Jason Tsay (GitHub Inc.) - initial API and implementation
@@ -89,6 +91,7 @@ public class EventService extends GitHubService {
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(SEGMENT_EVENTS);
 		request.setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -388,6 +391,7 @@ public class EventService extends GitHubService {
 		uri.append(SEGMENT_EVENTS);
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -410,6 +414,7 @@ public class EventService extends GitHubService {
 		uri.append(SEGMENT_EVENTS);
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -431,6 +436,7 @@ public class EventService extends GitHubService {
 		uri.append(SEGMENT_EVENTS);
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -456,6 +462,7 @@ public class EventService extends GitHubService {
 			uri.append(SEGMENT_PUBLIC);
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -481,6 +488,7 @@ public class EventService extends GitHubService {
 			uri.append(SEGMENT_PUBLIC);
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -504,6 +512,7 @@ public class EventService extends GitHubService {
 		uri.append('/').append(org);
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}

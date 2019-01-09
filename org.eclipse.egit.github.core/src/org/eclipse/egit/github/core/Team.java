@@ -1,12 +1,16 @@
 /******************************************************************************
- *  Copyright (c) 2011 GitHub Inc.
+ *  Copyright (c) 2011, 2018 GitHub Inc. and others
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
+ *    Singaram Subramanian (Capital One) - (Bug: 529850)
+ *    			 User teams across GitHub organizations implementation
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
@@ -31,6 +35,8 @@ public class Team implements Serializable {
 	private String permission;
 
 	private String url;
+
+	private Organization organization;
 
 	/**
 	 * @return id
@@ -126,6 +132,20 @@ public class Team implements Serializable {
 	public Team setUrl(String url) {
 		this.url = url;
 		return this;
+	}
+
+	/**
+	 * @return the organization
+	 */
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	/**
+	 * @param organization the organization to set
+	 */
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
 	}
 
 }

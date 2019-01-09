@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -12,6 +14,7 @@ package org.eclipse.egit.github.core;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.egit.github.core.util.DateUtils;
 
@@ -82,6 +85,8 @@ public class PullRequest implements Serializable {
 	private User mergedBy;
 
 	private User user;
+
+	private List<User> assignees;
 
 	/**
 	 * @return mergeable
@@ -563,6 +568,24 @@ public class PullRequest implements Serializable {
 	public PullRequest setAssignee(User assignee) {
 		this.assignee = assignee;
 		return this;
+	}
+
+	/**
+	 *
+	 * @param assignees
+	 * @return this pull request
+	 */
+	public PullRequest setAssignees(List<User> assignees) {
+		this.assignees = assignees;
+		return this;
+	}
+
+	/**
+	 *
+	 * @return assignees
+	 */
+	public List<User> getAssignees() {
+		return assignees;
 	}
 
 	@Override

@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -124,6 +126,7 @@ public class GistService extends GitHubService {
 		PagedRequest<Gist> request = createPagedRequest(start, size);
 		request.setUri(SEGMENT_GISTS + SEGMENT_STARRED);
 		request.setType(new TypeToken<List<Gist>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -158,6 +161,7 @@ public class GistService extends GitHubService {
 		uri.append(SEGMENT_GISTS);
 		PagedRequest<Gist> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Gist>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -244,6 +248,7 @@ public class GistService extends GitHubService {
 		PagedRequest<Gist> request = createPagedRequest(start, size);
 		request.setUri(SEGMENT_GISTS + SEGMENT_PUBLIC);
 		request.setType(new TypeToken<List<Gist>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -318,6 +323,7 @@ public class GistService extends GitHubService {
 		uri.append(SEGMENT_COMMENTS);
 		PagedRequest<Comment> request = createPagedRequest();
 		request.setUri(uri).setType(new TypeToken<List<Comment>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}

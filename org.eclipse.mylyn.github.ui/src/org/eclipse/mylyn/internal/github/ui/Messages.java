@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -65,12 +67,6 @@ public class Messages extends NLS {
 	public static String RepositorySearchWizardPage_Description;
 
 	/** */
-	public static String RepositorySearchWizardPage_Fork;
-
-	/** */
-	public static String RepositorySearchWizardPage_Forks;
-
-	/** */
 	public static String RepositorySearchWizardPage_SearchButton;
 
 	/** */
@@ -83,10 +79,7 @@ public class Messages extends NLS {
 	public static String RepositorySearchWizardPage_Title;
 
 	/** */
-	public static String RepositorySearchWizardPage_Watcher;
-
-	/** */
-	public static String RepositorySearchWizardPage_Watchers;
+	public static String RepositorySearchWizardPage_counters;
 
 	/** */
 	public static String RepositorySelectionWizardPage_Description;
@@ -117,6 +110,9 @@ public class Messages extends NLS {
 
 	/** */
 	public static String RepositorySelectionWizardPage_TooltipUncheckAll;
+
+	/** */
+	public static String TaskRepositoryImportWizard_Title;
 
 	static {
 		// initialize resource bundle

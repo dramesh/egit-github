@@ -1,9 +1,11 @@
 /******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -59,7 +61,8 @@ public class LabelTest {
 		l1.setName("a");
 		Label l3 = new Label().setName("a");
 		assertTrue(l1.equals(l1));
-		assertFalse(l1.equals("a"));
+		Object string = "a";
+		assertFalse(l1.equals(string));
 		assertFalse(l1.equals(l2));
 		assertTrue(l1.equals(l3));
 		assertEquals(l1.hashCode(), l3.hashCode());

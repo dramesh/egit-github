@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -138,9 +140,9 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 				sizeCount += file.getSize();
 				TaskAttachmentMapper attachmentMapper = new TaskAttachmentMapper();
 				attachmentMapper.setFileName(file.getFilename());
-				attachmentMapper.setReplaceExisting(true);
-				attachmentMapper.setLength((long) file.getSize());
-				attachmentMapper.setPatch(false);
+				attachmentMapper.setReplaceExisting(Boolean.TRUE);
+				attachmentMapper.setLength(Long.valueOf(file.getSize()));
+				attachmentMapper.setPatch(Boolean.FALSE);
 				attachmentMapper.setAuthor(reporterPerson);
 				attachmentMapper.setAttachmentId(file.getFilename());
 				TaskAttribute attribute = data.getRoot().createAttribute(
@@ -191,7 +193,8 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 		}
 		if (files != 1)
 			summaryText.append(MessageFormat.format(
-					Messages.GistTaskDataHandler_FilesMultiple, files));
+					Messages.GistTaskDataHandler_FilesMultiple,
+					Integer.valueOf(files)));
 		else
 			summaryText.append(Messages.GistTaskDataHandler_FilesSingle);
 		summaryText.append(',').append(' ').append(formatSize(size));
@@ -220,6 +223,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 	 *      org.eclipse.mylyn.tasks.core.data.TaskData, java.util.Set,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public RepositoryResponse postTaskData(TaskRepository repository,
 			TaskData taskData, Set<TaskAttribute> oldAttributes,
 			IProgressMonitor monitor) throws CoreException {
@@ -232,7 +236,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 		if (credentials != null) {
 			client.setCredentials(credentials.getUserName(),
 					credentials.getPassword());
-			gist.setUser(new User().setLogin(credentials.getUserName()));
+			gist.setOwner(new User().setLogin(credentials.getUserName()));
 		}
 
 		GistService service = new GistService(client);
@@ -275,6 +279,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 	 *      org.eclipse.mylyn.tasks.core.ITaskMapping,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public boolean initializeTaskData(TaskRepository repository, TaskData data,
 			ITaskMapping initializationData, IProgressMonitor monitor)
 			throws CoreException {

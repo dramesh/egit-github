@@ -1,9 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2011 Red Hat and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     David Green <david.green@tasktop.com> - initial contribution
@@ -48,7 +50,7 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * Get core repository connector
-	 * 
+	 *
 	 * @return connector
 	 */
 	public static IssueConnector getCoreConnector() {
@@ -57,8 +59,8 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @return the unique type of the repository: "github"
 	 */
 	@Override
@@ -67,8 +69,8 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @return {@link AbstractRepositorySettingsPage} with GitHub specific
 	 *         parameter like user name, password, ...
 	 */
@@ -79,8 +81,8 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @return {@link NewTaskWizard} with GitHub specific tab
 	 */
 	@Override
@@ -91,7 +93,7 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * This {@link AbstractRepositoryConnectorUi} has search page.
-	 * 
+	 *
 	 * @return {@code true}
 	 */
 	@Override
@@ -103,7 +105,7 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 	 * Returns {@link IWizard} used in Mylyn for creating new queries. This
 	 * {@link IWizard} has a wizard page for creating GitHub specific task
 	 * queries.
-	 * 
+	 *
 	 * @return {@link RepositoryQueryWizard} with GitHub specific query page
 	 */
 	@Override
@@ -116,9 +118,10 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 		return wizard;
 	}
 
+	@Override
 	public IHyperlink[] findHyperlinks(TaskRepository repository, String text,
 			int index, int textOffset) {
-		List<IHyperlink> hyperlinks = new ArrayList<IHyperlink>();
+		List<IHyperlink> hyperlinks = new ArrayList<>();
 
 		Matcher matcher = issuePattern.matcher(text);
 		while (matcher.find()) {
@@ -160,12 +163,12 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 				} else if (user != null && project != null) {
 					Region region = createRegion(textOffset, matcher);
 					String url = GitHub.createGitHubUrl(user, project)
-							+ "/issues/" + taskId;
+							+ "/issues/" + taskId; //$NON-NLS-1$
 					hyperlinks.add(new URLHyperlink(region, url));
 				}
 			}
 		}
-		return hyperlinks.toArray(new IHyperlink[hyperlinks.size()]);
+		return hyperlinks.toArray(new IHyperlink[0]);
 	}
 
 	private Region createRegion(int textOffset, Matcher matcher) {
@@ -177,6 +180,7 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getSearchPage(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.jface.viewers.IStructuredSelection)
 	 */
+	@Override
 	public ITaskSearchPage getSearchPage(TaskRepository repository,
 			IStructuredSelection selection) {
 		return new IssueRepositoryQueryPage(repository, null);

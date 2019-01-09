@@ -1,9 +1,11 @@
 /******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -23,6 +25,8 @@ import java.util.Map;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryHook;
 import org.eclipse.egit.github.core.RepositoryId;
+import org.eclipse.egit.github.core.RepositoryMerging;
+import org.eclipse.egit.github.core.RepositoryMergingResponse;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
@@ -32,7 +36,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Unit tests of {@link RepositoryService}
@@ -622,5 +626,21 @@ public class RepositoryServiceTest {
 	public void runHook() throws IOException {
 		service.testHook(repo, 5609);
 		verify(client).post("/repos/o/n/hooks/5609/test");
+	}
+
+	/**
+	 * Run merge in repository
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void runMerge() throws IOException {
+		RepositoryMerging merge = new RepositoryMerging();
+		merge.setBase("develop");
+		merge.setHead("master");
+		merge.setCommitMessage("Test Merge");
+		service.mergingBranches(repo, merge);
+		verify(client).post("/repos/o/n/merges", merge,
+				RepositoryMergingResponse.class);
 	}
 }

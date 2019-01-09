@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -86,6 +88,7 @@ public class LabelService extends GitHubService {
 		PagedRequest<Label> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Label>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -137,6 +140,7 @@ public class LabelService extends GitHubService {
 		uri.append(SEGMENT_LABELS);
 
 		return client.put(uri.toString(), labels, new TypeToken<List<Label>>() {
+			// make protected type visible
 		}.getType());
 	}
 

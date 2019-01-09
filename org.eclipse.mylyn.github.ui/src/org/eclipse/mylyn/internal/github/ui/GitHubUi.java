@@ -1,9 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2011 Red Hat and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     David Green <david.green@tasktop.com> - initial contribution
@@ -13,11 +15,10 @@
 package org.eclipse.mylyn.internal.github.ui;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -37,7 +38,7 @@ public class GitHubUi extends AbstractUIPlugin {
 	/**
 	 * BUNDLE_ID
 	 */
-	public static final String BUNDLE_ID = "org.eclipse.mylyn.github.ui";
+	public static final String BUNDLE_ID = "org.eclipse.mylyn.github.ui"; //$NON-NLS-1$
 
 	/**
 	 * STORE_NAME
@@ -48,7 +49,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Create status
-	 * 
+	 *
 	 * @param severity
 	 * @param message
 	 * @return status
@@ -59,7 +60,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Create status
-	 * 
+	 *
 	 * @param severity
 	 * @param message
 	 * @param e
@@ -71,7 +72,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Create error status from message
-	 * 
+	 *
 	 * @param message
 	 * @return status
 	 */
@@ -81,7 +82,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Create error status from message and throwable
-	 * 
+	 *
 	 * @param message
 	 * @param t
 	 * @return status
@@ -92,18 +93,18 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Create error status from throwable
-	 * 
+	 *
 	 * @param e
 	 * @return status
 	 */
 	public static IStatus createErrorStatus(Throwable e) {
 		return createStatus(IStatus.ERROR,
-				"Unexpected error: " + e.getMessage(), e);
+				"Unexpected error: " + e.getMessage(), e); //$NON-NLS-1$
 	}
 
 	/**
 	 * Log message and throwable as error
-	 * 
+	 *
 	 * @param message
 	 * @param t
 	 */
@@ -113,7 +114,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Log throwable as error
-	 * 
+	 *
 	 * @param t
 	 */
 	public static void logError(Throwable t) {
@@ -124,7 +125,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Get default activator
-	 * 
+	 *
 	 * @return plug-in
 	 */
 	public static GitHubUi getDefault() {
@@ -142,7 +143,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Get avatar store
-	 * 
+	 *
 	 * @return avatar store
 	 */
 	public AvatarStore getStore() {
@@ -152,6 +153,7 @@ public class GitHubUi extends AbstractUIPlugin {
 	/**
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		INSTANCE = this;
@@ -163,7 +165,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Load avatars
-	 * 
+	 *
 	 * @param context
 	 */
 	protected void loadAvatars(BundleContext context) {
@@ -172,7 +174,7 @@ public class GitHubUi extends AbstractUIPlugin {
 		if (file.exists()) {
 			ObjectInputStream stream = null;
 			try {
-				stream = new ObjectInputStream(new FileInputStream(file));
+				stream = new ObjectInputStream(Files.newInputStream(file.toPath()));
 				store = (AvatarStore) stream.readObject();
 			} catch (IOException e) {
 				logError("Error reading avatar store", e); //$NON-NLS-1$
@@ -193,7 +195,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Save avatars
-	 * 
+	 *
 	 * @param context
 	 */
 	protected void saveAvatars(BundleContext context) {
@@ -201,25 +203,17 @@ public class GitHubUi extends AbstractUIPlugin {
 		IPath location = Platform.getStateLocation(context.getBundle());
 		File file = location.append(STORE_NAME).toFile();
 
-		ObjectOutputStream stream = null;
-		try {
-			stream = new ObjectOutputStream(new FileOutputStream(file));
+		try (ObjectOutputStream stream = new ObjectOutputStream(Files.newOutputStream(file.toPath()))) {
 			stream.writeObject(this.store);
 		} catch (IOException e) {
 			logError("Error writing avatar store", e); //$NON-NLS-1$
-		} finally {
-			if (stream != null)
-				try {
-					stream.close();
-				} catch (IOException ignore) {
-					// Ignored
-				}
 		}
 	}
 
 	/**
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		INSTANCE = null;

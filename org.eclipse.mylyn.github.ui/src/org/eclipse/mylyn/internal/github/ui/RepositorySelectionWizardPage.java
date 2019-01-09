@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -38,7 +40,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.GitHubException;
@@ -70,24 +72,32 @@ public class RepositorySelectionWizardPage extends WizardPage {
 			IStyledLabelProvider, ILabelProvider {
 		private final WorkbenchLabelProvider wrapped = new WorkbenchLabelProvider();
 
+		@Override
 		public String getText(Object element) {
 			return wrapped.getText(element);
 		}
 
+		@Override
 		public void addListener(ILabelProviderListener listener) {
+			// empty
 		}
 
+		@Override
 		public void dispose() {
 			wrapped.dispose();
 		}
 
+		@Override
 		public boolean isLabelProperty(Object element, String property) {
 			return false;
 		}
 
+		@Override
 		public void removeListener(ILabelProviderListener listener) {
+			// empty
 		}
 
+		@Override
 		public StyledString getStyledText(Object element) {
 			// TODO Replace with use of IWorkbenchAdapter3 when 3.6 is no longer
 			// supported
@@ -99,6 +109,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 			return new StyledString(wrapped.getText(element));
 		}
 
+		@Override
 		public Image getImage(Object element) {
 			return wrapped.getImage(element);
 		}
@@ -115,10 +126,12 @@ public class RepositorySelectionWizardPage extends WizardPage {
 			wrapped = (RepositoryStyledLabelProvider) getStyledStringProvider();
 		}
 
+		@Override
 		public String getText(Object element) {
 			return wrapped.getText(element);
 		}
 
+		@Override
 		public void dispose() {
 			super.dispose();
 			wrapped.dispose();
@@ -133,11 +146,13 @@ public class RepositorySelectionWizardPage extends WizardPage {
 			this.repo = repo;
 		}
 
+		@Override
 		public String getLabel(Object object) {
 			String label = this.repo.generateId();
-			return label != null ? label : "";
+			return label != null ? label : ""; //$NON-NLS-1$
 		}
 
+		@Override
 		public ImageDescriptor getImageDescriptor(Object object) {
 			return TasksUiImages.REPOSITORY;
 		}
@@ -158,21 +173,27 @@ public class RepositorySelectionWizardPage extends WizardPage {
 				this.repos[i] = new RepositoryAdapter(repos.get(i));
 		}
 
+		@Override
 		public ImageDescriptor getImageDescriptor(Object object) {
 			return GitHubImages.DESC_GITHUB_ORG;
 		}
 
+		@Override
 		public Object[] getChildren(Object object) {
 			return repos;
 		}
 
+		@Override
 		public StyledString getStyledText(Object object) {
 			StyledString styled = new StyledString(getLabel(object));
-			styled.append(MessageFormat.format(" ({0})", repos.length),
+			styled.append(
+					MessageFormat.format(" ({0})", //$NON-NLS-1$
+							Integer.valueOf(repos.length)),
 					StyledString.COUNTER_STYLER);
 			return styled;
 		}
 
+		@Override
 		public String getLabel(Object object) {
 			return org.getLogin();
 		}
@@ -222,6 +243,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 	}
 
 	/** @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite) */
+	@Override
 	public void createControl(Composite parent) {
 		Composite displayArea = new Composite(parent, SWT.NONE);
 		GridLayoutFactory.swtDefaults().numColumns(2).applyTo(displayArea);
@@ -236,8 +258,9 @@ public class RepositorySelectionWizardPage extends WizardPage {
 		CheckboxTreeViewer viewer = tree.getCheckboxTreeViewer();
 		viewer.setContentProvider(new WorkbenchContentProvider());
 		viewer.setLabelProvider(new RepositoryLabelProvider());
-		viewer.setSorter(new ViewerSorter() {
+		viewer.setComparator(new ViewerComparator() {
 
+			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				if (e1 instanceof OrganizationAdapter)
 					if (e2 instanceof OrganizationAdapter)
@@ -260,6 +283,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 		});
 		viewer.addCheckStateListener(new ICheckStateListener() {
 
+			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				updateSelectionLabel();
 			}
@@ -274,6 +298,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 				.setToolTipText(Messages.RepositorySelectionWizardPage_TooltipCheckAll);
 		checkItem.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tree.getCheckboxTreeViewer().setAllChecked(true);
 				for (Object leaf : tree.getCheckboxTreeViewer()
@@ -289,6 +314,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 				.setToolTipText(Messages.RepositorySelectionWizardPage_TooltipUncheckAll);
 		uncheckItem.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tree.getCheckboxTreeViewer().setCheckedElements(new Object[0]);
 				updateSelectionLabel();
@@ -306,6 +332,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 		GridDataFactory.swtDefaults().span(2, 1).applyTo(addGistRepoButton);
 		addGistRepoButton.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				validatePage();
 			}
@@ -319,7 +346,9 @@ public class RepositorySelectionWizardPage extends WizardPage {
 	private void updateSelectionLabel() {
 		selectedLabel.setText(MessageFormat.format(
 				Messages.RepositorySelectionWizardPage_LabelSelectionCount,
-				tree.getCheckboxTreeViewer().getCheckedLeafCount(), repoCount));
+				Integer.valueOf(
+						tree.getCheckboxTreeViewer().getCheckedLeafCount()),
+				Integer.valueOf(repoCount)));
 		selectedLabel.getParent().layout(true, true);
 		validatePage();
 	}
@@ -333,12 +362,14 @@ public class RepositorySelectionWizardPage extends WizardPage {
 	private void updateInput(final List<Object> repos) {
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				if (getControl().isDisposed())
 					return;
 				tree.getCheckboxTreeViewer().setCheckedElements(new Object[0]);
 				tree.getViewer().setInput(new WorkbenchAdapter() {
 
+					@Override
 					public Object[] getChildren(Object object) {
 						return repos.toArray();
 					}
@@ -359,6 +390,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 	}
 
 	/** @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean) */
+	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (!visible)
@@ -368,6 +400,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 		try {
 			getContainer().run(true, true, new IRunnableWithProgress() {
 
+				@Override
 				public void run(IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException {
 					GitHubClient client = GitHub
@@ -376,8 +409,8 @@ public class RepositorySelectionWizardPage extends WizardPage {
 					RepositoryService service = new RepositoryService(client);
 					OrganizationService orgs = new OrganizationService(client);
 					repoCount = 0;
-					List<Object> repos = new ArrayList<Object>();
-					List<String> existing = new ArrayList<String>();
+					List<Object> repos = new ArrayList<>();
+					List<String> existing = new ArrayList<>();
 					for (TaskRepository repo : TasksUi.getRepositoryManager()
 							.getRepositories(GitHub.CONNECTOR_KIND)) {
 						String id = GitHub.getRepository(

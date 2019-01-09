@@ -1,9 +1,11 @@
 /******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -41,7 +43,6 @@ public class UserTest {
 		assertNull(user.getEmail());
 		assertEquals(0, user.getFollowers());
 		assertEquals(0, user.getFollowing());
-		assertNull(user.getGravatarId());
 		assertNull(user.getHtmlUrl());
 		assertEquals(0, user.getId());
 		assertNull(user.getLocation());
@@ -75,7 +76,6 @@ public class UserTest {
 		assertEquals("e@mai.l", user.setEmail("e@mai.l").getEmail());
 		assertEquals(1, user.setFollowers(1).getFollowers());
 		assertEquals(2, user.setFollowing(2).getFollowing());
-		assertEquals("gid", user.setGravatarId("gid").getGravatarId());
 		assertEquals("html", user.setHtmlUrl("html").getHtmlUrl());
 		assertEquals(90, user.setId(90).getId());
 		assertEquals("earth", user.setLocation("earth").getLocation());

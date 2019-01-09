@@ -1,9 +1,11 @@
 /*******************************************************************************
  *  Copyright (c) 2011 Christian Trutz
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Christian Trutz - initial API and implementation
@@ -65,7 +67,8 @@ public class SearchRepositoryTest {
 		SearchRepository repo2 = new SearchRepository("a", "c");
 		SearchRepository repo3 = new SearchRepository("a", "b");
 		assertTrue(repo1.equals(repo1));
-		assertFalse(repo1.equals("repo1"));
+		Object string = "repo1";
+		assertFalse(repo1.equals(string));
 		assertFalse(repo1.equals(repo2));
 		assertTrue(repo1.equals(repo3));
 		assertEquals(repo1.hashCode(), repo3.hashCode());

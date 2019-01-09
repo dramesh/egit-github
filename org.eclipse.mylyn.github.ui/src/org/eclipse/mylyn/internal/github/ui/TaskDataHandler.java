@@ -1,9 +1,11 @@
 /******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
  *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v1.0
+ *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v10.html
+ *  https://www.eclipse.org/legal/epl-2.0/
+ *
+ *  SPDX-License-Identifier: EPL-2.0
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -38,11 +40,11 @@ public abstract class TaskDataHandler extends AbstractHandler {
 	 * POST_HANDLER_CALLBACK - variable for post handler callback that is a
 	 * {@link Runnable}
 	 */
-	public static final String POST_HANDLER_CALLBACK = "postHandlerCallback";
+	public static final String POST_HANDLER_CALLBACK = "postHandlerCallback"; //$NON-NLS-1$
 
 	/**
 	 * Create context with given selection
-	 * 
+	 *
 	 * @param selection
 	 * @param handlerService
 	 * @return context
@@ -58,7 +60,7 @@ public abstract class TaskDataHandler extends AbstractHandler {
 
 	/**
 	 * Get task data from event
-	 * 
+	 *
 	 * @param event
 	 * @return task data
 	 */
@@ -84,9 +86,9 @@ public abstract class TaskDataHandler extends AbstractHandler {
 
 	/**
 	 * Should this handler be enabled for the given task data?
-	 * 
+	 *
 	 * Always returns true by default, sub-classes should override
-	 * 
+	 *
 	 * @param data
 	 * @return true is enabled, false otherwise
 	 */
@@ -96,7 +98,7 @@ public abstract class TaskDataHandler extends AbstractHandler {
 
 	/**
 	 * Schedule job
-	 * 
+	 *
 	 * @param job
 	 * @param event
 	 */
@@ -118,7 +120,7 @@ public abstract class TaskDataHandler extends AbstractHandler {
 
 	/**
 	 * Execute callback on trigger if configured
-	 * 
+	 *
 	 * @param event
 	 */
 	protected void executeCallback(ExecutionEvent event) {

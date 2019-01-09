@@ -1,9 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2011 Red Hat and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
@@ -62,6 +64,7 @@ public class CreateGistHandler extends AbstractHandler {
 	/**
 	 * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
 	 */
+	@Override
 	public boolean isEnabled() {
 		return !GistConnectorUi.getRepositories().isEmpty();
 	}
@@ -95,6 +98,7 @@ public class CreateGistHandler extends AbstractHandler {
 
 	}
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// TODO replace this with
 		// HandlerUtil.getActiveEditorInput(ExecutionEvent) as soon
@@ -135,9 +139,9 @@ public class CreateGistHandler extends AbstractHandler {
 					}
 				}
 			} else if (part instanceof IWorkbenchPart2)
-				name = ((IWorkbenchPart2) part).getPartName().replace(" ", "")
+				name = ((IWorkbenchPart2) part).getPartName().replace(" ", "") //$NON-NLS-1$ //$NON-NLS-2$
 						.toLowerCase(Locale.US)
-						+ ".txt";
+						+ ".txt"; //$NON-NLS-1$
 			if (name == null)
 				name = DEFAULT_FILENAME;
 			createGistJob(event, name, text.getText(), isPublic);
@@ -151,7 +155,7 @@ public class CreateGistHandler extends AbstractHandler {
 				file = (IResource) ((IAdaptable) obj)
 						.getAdapter(IResource.class);
 				if (file == null)
-					file = (IFile) ((IAdaptable) obj).getAdapter(IFile.class);
+					file = (IResource) ((IAdaptable) obj).getAdapter(IFile.class);
 			}
 			if (file instanceof IFile)
 				createGistJob(event, (IFile) file, isPublic);
